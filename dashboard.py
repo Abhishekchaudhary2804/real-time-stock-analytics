@@ -1,3 +1,5 @@
+from app.fetcher import fetch_intraday
+from app.analytics import add_indicators
 import streamlit as st
 import requests
 import pandas as pd
@@ -13,11 +15,9 @@ API_URL = "http://127.0.0.1:8000"
 
 if st.button("Load Data"):
 
-    stock_resp = requests.get(f"{API_URL}/stock/{symbol}")
-    signal_resp = requests.get(f"{API_URL}/signals/{symbol}")
-
-    df = pd.DataFrame(stock_resp.json())
-    signals = signal_resp.json()
+    df = fetch_intraday(symbol)
+    df = add_indicators(df)
+    signals = []
 
     st.subheader("Latest Signals")
     st.write(signals)
